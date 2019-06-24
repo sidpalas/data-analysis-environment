@@ -1,0 +1,46 @@
+---
+apiVersion: "extensions/v1beta1"
+kind: "Deployment"
+metadata:
+  name: "jupyter"
+  namespace: "default"
+  labels:
+    app: "jupyter"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "jupyter"
+  template:
+    metadata:
+      labels:
+        app: "jupyter"
+    spec:
+      volumes:
+      - name: notebook-pv-storage
+        persistentVolumeClaim:
+          claimName: notebook-pv-claim
+      containers:
+      - name: "jupyter-container-sha256"
+        image: "gcr.io/jupyter-244404/jupyter-container@sha256:a262fb360241379fa7c1a799a5a3e27d265e2c3aaa5a7ae30e8be0dd460a67be"
+        stdin: true
+        tty: true
+        resources:
+          requests:
+            memory: "11Gi"
+            cpu: "3.5"
+        volumeMounts:
+        - mountPath: "/home/notebooks"
+          name: notebook-pv-storage
+---
+# persistent volume claim
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: notebook-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
