@@ -18,6 +18,9 @@ gcloud container node-pools create n1-standard-4-nodepool \
     --preemptible  
 
 
+To ensure node gets autoscaled to zero after finishing...
+kubectl drain NODE_NAME
+
 gcloud container node-pools delete n1-standard-4-nodepool \
     --project=$PROJECT \
     --zone=us-central1-a \
