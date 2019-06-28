@@ -22,4 +22,4 @@ $ jupyter notebook
 ```
 This will start the Jupyter server on your machine, open a browser, and connect to it!
 
-![Our first jupyter server!](./images/first_success.png)
+![Our first jupyter server!](../images/first_success.png)

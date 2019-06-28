@@ -16,4 +16,4 @@ And then activate it:
 
 `pipenv shell`
 
-![No packages installed!](./images/pip_freeze.png)
+![No packages installed!](../images/pip_freeze.png)

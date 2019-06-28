@@ -16,7 +16,7 @@ Once built, we can run the following command to run the container within docker:
 
 `docker run jupyter-container`
 
-![No packages installed!](./images/now_what.png)
+![No packages installed!](../images/now_what.png)
 
 Okay, great! We have a notebook, running within the container... Now what? We can't actually connect to the notebook because localhost inside the container is different from localhost on our host system. To handle this, we need to forward network traffic to/from the container:
 
