@@ -5,6 +5,7 @@ First, lets make sure we have python installed
 $ python --version
 Python 2.7.15
 ```
+(Note: Python 2 is the default version on my current version of MacOS... don't worry we will be using Python 3 for the rest of the progression)
 
 Second, lets install Jupyter:
 
