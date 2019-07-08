@@ -71,11 +71,21 @@ Once it is up and running (the instance and container takes a few minutes to be 
 <!-- format the disk... https://cloud.google.com/compute/docs/disks/add-persistent-disk#formatting -->
 
 
-`gcloud compute ssh --project=<PROJECT_ID> --zone=us-central1-c <INSTANCE_NAME> -- 'docker ps'`
+```
+gcloud compute ssh <INSTANCE_NAME> \
+    --project=<PROJECT_ID> \
+    --zone=us-central1-c \
+    -- 'docker ps'
+```
 
 Then we can connect to the container and forward port 8888 to connect to the notebook server:
 
-`gcloud compute ssh --project=<PROJECT_ID> --zone=us-central1-c <INSTANCE_NAME> --container=<CONTAINER_ID> -- -L 8888:localhost:8888`
+```
+gcloud compute ssh <INSTANCE_NAME> \
+    --project=<PROJECT_ID> \
+    --zone=us-central1-c \
+    --container=<CONTAINER_ID> -- -L 8888:localhost:8888
+```
 
 Finally run `jupyter notebook list` to get the notebook token and connect.
 

@@ -50,8 +50,8 @@ delete-instance:
 
 .PHONY: get-container-id
 get-container-id:
-	$(eval CONTAINER_ID:=$(shell gcloud compute ssh --project=$(PROJECT_ID) --zone=us-central1-c $(INSTANCE_NAME) -- "docker ps | grep jupyter-container | cut -d ' ' -f1"))
-	$(eval TOKEN:=$(shell gcloud compute ssh --project=$(PROJECT_ID) --zone=us-central1-c $(INSTANCE_NAME) -- "docker exec -it $(CONTAINER_ID) jupyter notebook list | grep http | cut -c 15- | cut -d ' ' -f1"))
+	$(eval CONTAINER_ID:=$(shell gcloud compute ssh $(INSTANCE_NAME) --project=$(PROJECT_ID) --zone=us-central1-c -- "docker ps | grep jupyter-container | cut -d ' ' -f1"))
+	$(eval TOKEN:=$(shell gcloud compute ssh $(INSTANCE_NAME) --project=$(PROJECT_ID) --zone=us-central1-c -- "docker exec -it $(CONTAINER_ID) jupyter notebook list | grep http | cut -c 15- | cut -d ' ' -f1"))
 
 .PHONY: connect
 connect: get-container-id
