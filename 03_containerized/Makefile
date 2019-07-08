@@ -10,3 +10,8 @@ run-notebook:
 	TOKEN=$$(docker exec -it $$CONTAINER_ID jupyter notebook list | grep http | cut -c 15- | cut -d ' ' -f1); \
 	URL=http://localhost$$TOKEN; \
 	open -a "Google Chrome" $$URL
+
+.PHONY: stop-notebook
+stop-notebook:
+	CONTAINER_ID=$$(docker ps | grep jupyter-container | cut -d ' ' -f1); \
+	docker stop $$CONTAINER_ID
