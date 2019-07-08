@@ -38,3 +38,5 @@ docker run -p 8888:8888 -v $PWD/notebooks:/home/notebooks jupyter-container & \
         cut -d ' ' -f1) \
     )
 ```
+
+This command is cleaned up (slightly) by breaking it into pieces as a part of a make target. With this, `make run-notebook` can be used to launch and connect to a notebook running inside a container.
