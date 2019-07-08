@@ -84,7 +84,8 @@ Then we can connect to the container and forward port 8888 to connect to the not
 gcloud compute ssh <INSTANCE_NAME> \
     --project=<PROJECT_ID> \
     --zone=us-central1-c \
-    --container=<CONTAINER_ID> -- -L 8888:localhost:8888
+    --container=<CONTAINER_ID> \
+    -- -L 8888:localhost:8888
 ```
 
 Finally run `jupyter notebook list` to get the notebook token and connect.
