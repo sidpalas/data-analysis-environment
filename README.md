@@ -19,13 +19,21 @@ These were all tested on MacOS 10.14.
 ### Google Cloud Platform
 
  4. On GCP, in a Compute Engine Virtual Machine: The same container image from above is use, but is now deployed to a Compute Engine VM.
- 5. On GCP, in a Kubernetes Cluster:
-   a. Autoscaling Nodepool
+ 5. On GCP, in a Kubernetes Cluster (with an autoscaling nodepool)
 
  TODO:
-   b. With Helm
-   c. Using cloud deployment manager
+   b. With Helm or Kustomize
+   c. Using Cloud Deployment Manager
 
 ## The Why
 
 Having a standard environment with which to begin analysis lowers the activation energy for getting started. For an individual, step 5 isn't entirely practical, but I wanted to increase my familiarity with Kubernetes and GCP infrastructure + tools.
+
+## Existing Jupyter Dockerfiles
+ - [DockerHub](https://hub.docker.com/u/jupyter)
+
+## Alternatives
+ - [Google Colab](https://colab.research.google.com)
+ - [Google Cloud Datalab](https://cloud.google.com/datalab/)
+ - [Azure Notebooks](https://notebooks.azure.com/)
+ - [Crestle.ai](https://www.crestle.ai/)

@@ -1,57 +1,35 @@
 create service account (https://cloud.google.com/kubernetes-engine/docs/how-to/access-scopes)
 
-export PROJECT=jupyter-244404
 
-export NODE_SA_NAME=kubernetes-engine-node-sa
-gcloud iam service-accounts create $NODE_SA_NAME \
-  --project=$PROJECT \
-  --display-name "GKE Node Service Account"
+create cluster
 
-export NODE_SA_EMAIL=`gcloud iam service-accounts list --project=$PROJECT --format='value(email)' \
-  --filter='displayName:Node Service Account'`
+add nodepool(s)
 
-gcloud projects add-iam-policy-binding $PROJECT \
-    --member serviceAccount:$NODE_SA_EMAIL \
-    --role roles/monitoring.metricWriter
-gcloud projects add-iam-policy-binding $PROJECT \
-    --member serviceAccount:$NODE_SA_EMAIL \
-    --role roles/monitoring.viewer
-gcloud projects add-iam-policy-binding $PROJECT \
-    --member serviceAccount:$NODE_SA_EMAIL \
-    --role roles/logging.logWriter
-    gcloud projects add-iam-policy-binding $PROJECT \
-        --member serviceAccount:$NODE_SA_EMAIL \
-        --role roles/storage.objectViewer
+create deployment:
 
-In addition to the bare minimum, it also needs access to pull from container registry...
-
-create cluster...
-
-gcloud beta container clusters create data-analysis-cluster \
-    --project=$PROJECT \
-    --zone=us-central1-a \
-    --no-enable-basic-auth \
-    --cluster-version=1.12.8-gke.10 \
-    --machine-type=g1-small \
-    --image-type=COS \
-    --disk-type=pd-standard \
-    --disk-size=20 \
-    --service-account=$NODE_SA_EMAIL \
-    --num-nodes=1 \
-    --network=projects/jupyter-244404/global/networks/default \
-    --subnetwork=projects/jupyter-244404/regions/us-central1/subnetworks/default \
-    --enable-autoupgrade \
-    --enable-autorepair \
-    --no-issue-client-certificate \
-    --no-enable-ip-alias
-
-gcloud components install kubectl
-
-kubectl apply -f deployment.yaml
+```
+kubectl apply -f <DEPLOYMENT_FILE>.yaml
+```
 
 
-clean up...
 
-gcloud beta container clusters delete data-analysis-cluster \
-    --project=$PROJECT \
-    --zone=us-central1-a
+```
+Events:
+  Type     Reason                  Age              From                                                          Message
+  ----     ------                  ----             ----                                                          -------
+  Warning  FailedScheduling        2m (x2 over 2m)  default-scheduler                                             persistentvolumeclaim "notebook-pv-claim" not found
+  Normal   NotTriggerScaleUp       1m               cluster-autoscaler                                            pod didn't trigger scale-up (it wouldn't fit if a new node is added):
+  Warning  FailedScheduling        1m (x5 over 2m)  default-scheduler                                             0/1 nodes are available: 1 Insufficient cpu, 1 Insufficient memory.
+  Normal   TriggeredScaleUp        1m               cluster-autoscaler                                            pod triggered scale-up: [{https://content.googleapis.com/compute/v1/projects/jupyter-244404/zones/us-central1-a/instanceGroups/gke-data-analysis-cl-n1-standard-4-no-86ad6e2d-grp 0->1 (max: 1)}]
+  Normal   NotTriggerScaleUp       1m (x4 over 1m)  cluster-autoscaler                                            pod didn't trigger scale-up (it wouldn't fit if a new node is added): 1 max limit reached
+  Normal   Scheduled               58s              default-scheduler                                             Successfully assigned default/jupyter-dcf858885-rgb4j to gke-data-analysis-cl-n1-standard-4-no-86ad6e2d-sztf
+  Normal   SuccessfulAttachVolume  50s              attachdetach-controller                                       AttachVolume.Attach succeeded for volume "pvc-387d6b9a-a790-11e9-8894-42010a8000bf"
+  Normal   Pulling                 39s              kubelet, gke-data-analysis-cl-n1-standard-4-no-86ad6e2d-sztf  pulling image "gcr.io/jupyter-244404/jupyter-container:latest"
+  Normal   Pulled                  14s              kubelet, gke-data-analysis-cl-n1-standard-4-no-86ad6e2d-sztf  Successfully pulled image "gcr.io/jupyter-244404/jupyter-container:latest"
+  Normal   Created                 7s               kubelet, gke-data-analysis-cl-n1-standard-4-no-86ad6e2d-sztf  Created container
+  Normal   Started                 6s               kubelet, gke-data-analysis-cl-n1-standard-4-no-86ad6e2d-sztf  Started container
+ ```
+
+
+ To ensure node gets autoscaled to zero after finishing...
+ `kubectl drain NODE_NAME --ignore-daemonsets`
