@@ -16,6 +16,10 @@ create-service-account:
 	gcloud iam service-accounts create $(SERVICE_ACCOUNT_NAME) \
 	  --project=$(PROJECT_ID)
 
+# NOTE: If you remove and recreate the service account but do not clean up the
+# IAM roles, the new service account will not have the necessary roles
+# even though it will appear to have them.
+
 .PHONY: add-service-account-roles
 add-service-account-roles: get-service-account-email
 	gcloud projects add-iam-policy-binding $(PROJECT_ID) \
@@ -60,7 +64,9 @@ create-cluster: get-service-account-email
 		--network=projects/$(PROJECT_ID)/global/networks/default \
 		--subnetwork=projects/$(PROJECT_ID)/regions/us-central1/subnetworks/default \
 		--enable-autoupgrade \
-		--enable-autorepair
+		--enable-autorepair \
+		--no-issue-client-certificate \
+		--enable-ip-alias
 
 
 .PHONY: setup-kubectl
