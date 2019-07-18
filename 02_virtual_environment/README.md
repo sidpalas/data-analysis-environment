@@ -17,3 +17,11 @@ And then activate it:
 `pipenv shell`
 
 ![No packages installed!](../images/pip_freeze.png)
+
+At this point we can install jupyter and any dependencies without worrying about colliding with other python setups on the system:
+
+```
+$ pip install jupyter
+
+$ jupyter notebook
+```
