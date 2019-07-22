@@ -22,8 +22,8 @@ These were all tested on MacOS 10.14.
  5. On GCP, in a Kubernetes Cluster (with an autoscaling nodepool)
 
  TODO:
-   b. With Helm or Kustomize
-   c. Using Cloud Deployment Manager
+ - With Helm or Kustomize
+ - Using Cloud Deployment Manager
 
 ## The Why
 
