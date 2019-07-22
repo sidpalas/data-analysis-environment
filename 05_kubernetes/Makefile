@@ -8,6 +8,7 @@ SCALABLE_MACHINE_TYPE:=n1-standard-4
 
 .PHONY: get-service-account-email
 get-service-account-email:
+	# Hacky method of passing make variables around...
 	$(eval SERVICE_ACCOUNT_EMAIL:=$(shell gcloud iam service-accounts list --project=$(PROJECT_ID) --format='value(email)' --filter='name:$(SERVICE_ACCOUNT_NAME)'))
 	@echo $(SERVICE_ACCOUNT_EMAIL)
 
