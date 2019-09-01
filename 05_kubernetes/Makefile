@@ -105,17 +105,25 @@ add-nodepool: get-service-account-email
 
 .PHONY: remove-nodepool
 remove-nodepool:
-	gcloud container node-pools delete n1-standard-4-nodepool \
+	gcloud container node-pools delete $(SCALABLE_MACHINE_TYPE)-nodepool \
 	    --project=$(PROJECT_ID) \
 	    --zone=us-central1-a \
 	    --cluster=$(CLUSTER_NAME)
 
 # Notebook
 
+.PHONY: get-pod-name
+get-pod-name:
+	$(eval POD_NAME:=$(shell kubectl get pods | grep jupyter | cut -d ' ' -f1))
+	@echo $(POD_NAME)
+
 .PHONY: connect-to-notebook
-connect-to-notebook:
-	POD_ID=$$(kubectl get pods | grep jupyter | cut -d ' ' -f1); \
-	kubectl port-forward $$POD_ID 8888 & \
+connect-to-notebook: get-pod-name
+	kubectl port-forward $(POD_NAME) 8888 & \
 	TOKEN=$$(kubectl exec -it $$POD_ID jupyter notebook list | grep http | cut -c 15- | cut -d ' ' -f1); \
 	URL=http://localhost$$TOKEN; \
 	open -a "Google Chrome" $$URL
+
+.PHONY: connect-to-pod
+connect-to-pod: get-pod-name
+	kubectl exec -it $(POD_NAME) bash
