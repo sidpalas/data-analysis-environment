@@ -113,7 +113,7 @@ remove-nodepool:
 # Notebook
 
 .PHONY: connect-to-notebook
-connect-to-notebooks:
+connect-to-notebook:
 	POD_ID=$$(kubectl get pods | grep jupyter | cut -d ' ' -f1); \
 	kubectl port-forward $$POD_ID 8888 & \
 	TOKEN=$$(kubectl exec -it $$POD_ID jupyter notebook list | grep http | cut -c 15- | cut -d ' ' -f1); \
