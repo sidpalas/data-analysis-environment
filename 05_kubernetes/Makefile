@@ -35,6 +35,8 @@ add-service-account-roles: get-service-account-email
 	gcloud projects add-iam-policy-binding $(PROJECT_ID) \
 	    --member serviceAccount:$(SERVICE_ACCOUNT_EMAIL) \
 	    --role roles/storage.objectViewer
+			# --role roles/storage.objectCreator # to be able to mount GCS bucket
+
 
 .PHONY: setup-service-accout
 setup-service-account:
@@ -127,3 +129,38 @@ connect-to-notebook: get-pod-name
 .PHONY: connect-to-pod
 connect-to-pod: get-pod-name
 	kubectl exec -it $(POD_NAME) bash
+
+# ####
+#
+# used ubuntu:18.04 as base image
+#
+# ####
+#
+# gsutil mb gs://gsfuse-mount-bucket/
+#
+# ####
+#
+# apt-get update
+# apt-get install gnupg2
+# apt-get install curl
+#
+# export GCSFUSE_REPO=gcsfuse-bionic
+# echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list
+# curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+#
+# apt-get update
+# apt-get install gcsfuse
+#
+# mkdir bucket
+#
+# #had to add privileged context to container definition
+# # securityContext:
+# # 	privileged: true
+#
+# add roles/storage.objectCreator to service account to
+#
+# # kubectl cp ./<KEY-FILE>.json <POD-NAME>:/ (better method would be to store in a k8s secret)
+#
+# GOOGLE_APPLICATION_CREDENTIALS=/<KEY-FILE>.json gcsfuse <BUCKET-NAME> /bucket
+#
+#

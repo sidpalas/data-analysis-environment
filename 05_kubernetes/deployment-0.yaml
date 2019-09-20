@@ -2,7 +2,7 @@
 apiVersion: "extensions/v1beta1"
 kind: "Deployment"
 metadata:
-  name: "jupyter"
+  name: "jupyter-2"
   namespace: "default"
   labels:
     app: "jupyter"
@@ -22,7 +22,9 @@ spec:
           claimName: notebook-pv-claim
       containers:
       - name: "jupyter-container"
-        image: "gcr.io/jupyter-244404/jupyter-container:latest"
+        securityContext:
+          privileged: true
+        image: "ubuntu:18.04"
         stdin: true
         tty: true
         volumeMounts:
