@@ -4,6 +4,18 @@ CLUSTER_NAME:=data-analysis-cluster
 MACHINE_TYPE:=g1-small
 SCALABLE_MACHINE_TYPE:=n1-standard-4
 
+# Build image
+
+.PHONY: build-image
+build-image:
+	docker build ./ --tag jupyter-vscode
+
+.PHONY: tag-and-push-image
+tag-and-push-image:
+	docker tag jupyter-vscode  gcr.io/$(PROJECT_ID)/jupyter-vscode:latest;
+	docker push gcr.io/$(PROJECT_ID)/jupyter-vscode:latest;
+
+
 # Service account
 
 .PHONY: get-service-account-email
@@ -122,8 +134,15 @@ get-pod-name:
 .PHONY: connect-to-notebook
 connect-to-notebook: get-pod-name
 	kubectl port-forward $(POD_NAME) 8888 & \
-	TOKEN=$$(kubectl exec -it $$POD_ID jupyter notebook list | grep http | cut -c 15- | cut -d ' ' -f1); \
+	POD_NAME=$(POD_NAME); \
+	TOKEN=$$(kubectl exec -it $$POD_NAME jupyter notebook list | grep http | cut -c 15- | cut -d ' ' -f1); \
 	URL=http://localhost$$TOKEN; \
+	open -a "Google Chrome" $$URL
+
+.PHONY: connect-to-vscode
+connect-to-vscode: get-pod-name
+	kubectl port-forward $(POD_NAME) 8080 & \
+	URL=http://localhost:8080; \
 	open -a "Google Chrome" $$URL
 
 .PHONY: connect-to-pod

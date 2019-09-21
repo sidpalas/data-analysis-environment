@@ -2,27 +2,27 @@
 apiVersion: "extensions/v1beta1"
 kind: "Deployment"
 metadata:
-  name: "jupyter"
+  name: "jupyter-vscode"
   namespace: "default"
   labels:
-    app: "jupyter"
+    app: "jupyter-vscode"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "jupyter"
+      app: "jupyter-vscode"
   template:
     metadata:
       labels:
-        app: "jupyter"
+        app: "jupyter-vscode"
     spec:
       volumes:
       - name: notebook-pv-storage
         persistentVolumeClaim:
           claimName: notebook-pv-claim
       containers:
-      - name: "jupyter-container"
-        image: "gcr.io/jupyter-244404/jupyter-container:latest"
+      - name: "jupyter-vscode"
+        image: "gcr.io/jupyter-244404/jupyter-vscode:latest"
         stdin: true
         tty: true
         resources:
