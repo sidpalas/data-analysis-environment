@@ -17,25 +17,32 @@ spec:
         app: "jupyter-vscode"
     spec:
       volumes:
-      - name: notebook-pv-storage
+      - name: pv-storage
         persistentVolumeClaim:
-          claimName: notebook-pv-claim
+          claimName: pv-claim
       containers:
       - name: "jupyter-vscode"
         securityContext:
           privileged: true
         image: "gcr.io/jupyter-244404/jupyter-vscode:latest"
+        lifecycle:
+          postStart:
+            exec:
+              command: ["gcsfuse", "gcsfuse-mount-bucket", "/mnt/gcsfuse-bucket"]
+          preStop:
+            exec:
+              command: ["fusermount", "-u", "/mnt/gcsfuse-bucket"]
         stdin: true
         tty: true
         volumeMounts:
-        - mountPath: "/home/notebooks"
-          name: notebook-pv-storage
+        - mountPath: "/home/"
+          name: pv-storage
 ---
 # persistent volume claim
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: notebook-pv-claim
+  name: pv-claim
 spec:
   accessModes:
     - ReadWriteOnce

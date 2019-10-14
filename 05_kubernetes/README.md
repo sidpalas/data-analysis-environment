@@ -142,3 +142,9 @@ Events:
   Normal   Created                 7s               kubelet, gke-data-analysis-cl-n1-standard-4-no-86ad6e2d-sztf  Created container
   Normal   Started                 6s               kubelet, gke-data-analysis-cl-n1-standard-4-no-86ad6e2d-sztf  Started container
  ```
+
+### Additional Features 
+
+ - VS Code Server: Sometimes a jupyter notebook is not the right tool for the job and it is better to have an actual IDE. Luckily for us, the folks over at (https://coder.com/ // https://github.com/cdr/code-server) have wrapped VS Code in a webserver which allows us to have that in our container as well. I added this to the container image and created a make target to conect: `make connect-to-vscode`
+
+ - Additional persistant storage via GCS + FUSE: Persistent disks are great and allow our files to... well... persist, but sometimes we are bringing in large files from elsewhere and google cloud storage is a convenient place to hold those data. For this we can use https://cloud.google.com/storage/docs/gcs-fuse to mount a GCS bucket into our container!

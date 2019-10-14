@@ -47,8 +47,10 @@ add-service-account-roles: get-service-account-email
 	gcloud projects add-iam-policy-binding $(PROJECT_ID) \
 	    --member serviceAccount:$(SERVICE_ACCOUNT_EMAIL) \
 	    --role roles/storage.objectViewer
-			# --role roles/storage.objectCreator # to be able to mount GCS bucket
-
+	# to be able to mount GCS bucket
+	gcloud projects add-iam-policy-binding $(PROJECT_ID) \
+	    --member serviceAccount:$(SERVICE_ACCOUNT_EMAIL) \		
+		--role roles/storage.objectCreator
 
 .PHONY: setup-service-accout
 setup-service-account:
@@ -69,7 +71,6 @@ create-cluster: get-service-account-email
 		--project=$(PROJECT_ID) \
 		--zone=us-central1-a \
 		--no-enable-basic-auth \
-		--cluster-version=1.12.8-gke.10 \
 		--machine-type=$(MACHINE_TYPE) \
 		--image-type=COS \
 		--disk-type=pd-standard \
@@ -82,7 +83,6 @@ create-cluster: get-service-account-email
 		--enable-autorepair \
 		--no-issue-client-certificate \
 		--enable-ip-alias
-
 
 .PHONY: setup-kubectl
 setup-kubectl:
@@ -149,37 +149,10 @@ connect-to-vscode: get-pod-name
 connect-to-pod: get-pod-name
 	kubectl exec -it $(POD_NAME) bash
 
-# ####
-#
-# used ubuntu:18.04 as base image
-#
-# ####
-#
-# gsutil mb gs://gsfuse-mount-bucket/
-#
-# ####
-#
-# apt-get update
-# apt-get install gnupg2
-# apt-get install curl
-#
-# export GCSFUSE_REPO=gcsfuse-bionic
-# echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list
-# curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-#
-# apt-get update
-# apt-get install gcsfuse
-#
-# mkdir bucket
-#
-# #had to add privileged context to container definition
-# # securityContext:
-# # 	privileged: true
-#
-# add roles/storage.objectCreator to service account to
-#
-# # kubectl cp ./<KEY-FILE>.json <POD-NAME>:/ (better method would be to store in a k8s secret)
-#
-# GOOGLE_APPLICATION_CREDENTIALS=/<KEY-FILE>.json gcsfuse <BUCKET-NAME> /bucket
-#
-#
+# GCSFUSE bucket mount
+
+BUCKET_NAME:=gcsfuse-mount-bucket
+.PHONY: make-bucket
+make-bucket:
+	gsutil mb "gs://$(BUCKET_NAME)/"
+

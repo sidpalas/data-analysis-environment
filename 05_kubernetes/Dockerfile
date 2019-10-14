@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-### vscode server 
+#### vscode server 
 
 RUN apt-get update
 RUN apt-get install -y wget
@@ -18,6 +18,16 @@ COPY ./requirements.txt /tmp
 WORKDIR /tmp
 RUN pip3 install -r requirements.txt
 RUN mkdir /home/notebooks
+
+#### gcs fuse
+
+RUN apt-get install -y gnupg2 curl
+RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-bionic main" | tee /etc/apt/sources.list.d/gcsfuse.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN apt-get update
+RUN apt-get install -y gcsfuse
+
+RUN mkdir /mnt/gcsfuse-bucket 
 
 #### run both
 
