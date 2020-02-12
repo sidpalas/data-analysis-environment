@@ -53,7 +53,7 @@ gcloud beta container clusters create <CLUSTER_NAME> \
 
 ### Setup Kubectl
 
-To interact with the cluster we use a utility called kubectl. The following command will use your google credentials to configure kubectl for the newly created cluster:
+To interact with the cluster we use a utility called `kubectl`. The following command will use your google credentials to configure `kubectl` for the newly created cluster:
 
 ```
 gcloud container clusters get-credentials <CLUSTER_NAME> \
@@ -97,13 +97,13 @@ kubectl apply -f <DEPLOYMENT_FILE>.yaml
 To remove the deployment, the resource can simply be deleted:
 
 ```
-kubectl delete deploment <DEPLOYMENT_NAME>
+kubectl delete deployment <DEPLOYMENT_NAME>
 ```
 
-NOTE: If you have deleted the deployment but the autoscaling node hasn't stopped you can use the drain command to ensure the node actually gets autoscaled to zero:
+NOTE: If you have deleted the deployment but the autoscaling node hasn't stopped you can use the `drain` command, followed by a `node delete` to ensure the node actually gets autoscaled to zero:
 
 ```
-kubectl drain NODE_NAME --ignore-daemonsets
+kubectl drain <NODE_NAME> --ignore-daemonsets && kubectl delete node <NODE_NAME>
 ```
 
 ### Connecting to notebook
